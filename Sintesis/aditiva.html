@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Síntesis Aditiva</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="aditiva.css">
+</head>
+<body>
+  <h1>Síntesis Aditiva</h1>
+
+  <div class="slider-group">
+    <h2>Onda 1</h2>
+    <label>Tipo:
+      <select id="wave1Type">
+        <option value="sine">Senoidal</option>
+        <option value="square">Cuadrada</option>
+      </select>
+    </label>
+    <label>Frecuencia: <span id="freq1Val">440</span> Hz</label>
+    <input type="range" id="freq1" min="100" max="4000" value="440">
+    <label>Amplitud: <span id="amp1Val">0.5</span></label>
+    <input type="range" id="amp1" min="0" max="2" step="0.01" value="0.5">
+  </div>
+
+  <div class="slider-group">
+    <h2>Onda 2</h2>
+    <label>Tipo:
+      <select id="wave2Type">
+        <option value="sine">Senoidal</option>
+        <option value="square">Cuadrada</option>
+      </select>
+    </label>
+    <label>Frecuencia: <span id="freq2Val">550</span> Hz</label>
+    <input type="range" id="freq2" min="100" max="4000" value="550">
+    <label>Amplitud: <span id="amp2Val">0.5</span></label>
+    <input type="range" id="amp2" min="0" max="2" step="0.01" value="0.5">
+  </div>
+ 
+  <div>
+  <canvas id="oscilloscope" width="600" height="200"></canvas>
+  </div>
+  
+  <button id="toggle">Reproducir / Detener</button>
+
+  <script src="aditiva.js" defer></script>
+</body>
+</html>

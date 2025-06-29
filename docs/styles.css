@@ -52,7 +52,18 @@ body {
     font-size: 1em;
     color: #dddddd;
   }
-  
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    background-color: lightgreen;
+  }
+}
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
+    background-color: lightcoral;
+  }
+}
   footer {
     margin-top: auto;
     padding: 20px;

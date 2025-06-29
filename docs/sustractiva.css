@@ -50,4 +50,16 @@ body {
     background: black;
     border: 2px solid #444;
     border-radius: 8px;
-  }  
+  }    
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    background-color: black;
+  }
+}
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
+    background-color: black;
+  }
+}

@@ -1,6 +1,11 @@
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-let osc1, gain1, osc2, gain2, analyser, animationId;
-let isPlaying = false;
+window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+window.osc1 = null;
+window.gain1 = null;
+window.osc2 = null;
+window.gain2 = null;
+window.analyser = null;
+window.isPlaying = false;
+let animationId;
 
 const freq1 = document.getElementById('freq1');
 const freq2 = document.getElementById('freq2');
@@ -25,6 +30,7 @@ function drawOscilloscope() {
   const dataArray = new Uint8Array(bufferLength);
   analyser.getByteTimeDomainData(dataArray);
 
+  window.analyser.getByteTimeDomainData(dataArray);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.lineWidth = 2;
@@ -49,39 +55,67 @@ function drawOscilloscope() {
 }
 
 document.getElementById('toggle').onclick = () => {
-  if (!isPlaying) {
-    osc1 = audioCtx.createOscillator();
-    gain1 = audioCtx.createGain();
-    osc2 = audioCtx.createOscillator();
-    gain2 = audioCtx.createGain();
-    analyser = audioCtx.createAnalyser();
+   if (!window.isPlaying) {
+    window.osc1 = window.audioCtx.createOscillator();
+    window.gain1 = window.audioCtx.createGain();
+    window.osc2 = window.audioCtx.createOscillator();
+    window.gain2 = window.audioCtx.createGain();
+    window.analyser = window.audioCtx.createAnalyser();
 
-    osc1.type = document.getElementById('wave1Type').value;
-    osc2.type = document.getElementById('wave2Type').value;
+    window.osc1.type = document.getElementById('wave1Type').value;
+    window.osc2.type = document.getElementById('wave2Type').value;
 
-    osc1.frequency.value = freq1.value;
-    gain1.gain.value = amp1.value;
+    const now = audioCtx.currentTime;
+    window.osc1.frequency.setTargetAtTime(freq1.value, now, 0.01);
+    window.gain1.gain.setTargetAtTime(amp1.value, now, 0.01);
+    window.osc2.frequency.setTargetAtTime(freq2.value, now, 0.01);
+    window.gain2.gain.setTargetAtTime(amp2.value, now, 0.01);
 
-    osc2.frequency.value = freq2.value;
-    gain2.gain.value = amp2.value;
+    
+    freq1.addEventListener("input", () => {
+  freq1Val.textContent = freq1.value;
+  if (window.osc1) {
+    window.osc1.frequency.setTargetAtTime(freq1.value, audioCtx.currentTime, 0.01);
+  }
+});
 
-    const merger = audioCtx.createGain();
+freq2.addEventListener("input", () => {
+  freq2Val.textContent = freq2.value;
+  if (window.osc2) {
+    window.osc2.frequency.setTargetAtTime(freq2.value, audioCtx.currentTime, 0.01);
+  }
+});
 
-    osc1.connect(gain1).connect(merger);
-    osc2.connect(gain2).connect(merger);
+amp1.addEventListener("input", () => {
+  amp1Val.textContent = amp1.value;
+  if (window.gain1) {
+    window.gain1.gain.setTargetAtTime(amp1.value, audioCtx.currentTime, 0.01);
+  }
+});
 
-    merger.connect(analyser).connect(audioCtx.destination);
+amp2.addEventListener("input", () => {
+  amp2Val.textContent = amp2.value;
+  if (window.gain2) {
+    window.gain2.gain.setTargetAtTime(amp2.value, audioCtx.currentTime, 0.01);
+  }
+});
 
-    osc1.start();
-    osc2.start();
+
+    const merger = window.audioCtx.createGain();
+    window.osc1.connect(window.gain1).connect(merger);
+    window.osc2.connect(window.gain2).connect(merger);
+    merger.connect(window.analyser).connect(window.audioCtx.destination);
+
+    window.osc1.start();
+    window.osc2.start();
 
     drawOscilloscope();
-    isPlaying = true;
+    window.isPlaying = true;
   } else {
-    osc1.stop();
-    osc2.stop();
+    window.osc1.stop();
+    window.osc2.stop();
     cancelAnimationFrame(animationId);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    isPlaying = false;
+    window.isPlaying = false;
   }
 };
